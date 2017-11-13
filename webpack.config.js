@@ -1,31 +1,25 @@
 var webpack = require('webpack'),
+    ExtractTextPlugin = require('extract-text-webpack-plugin'),
     fs = require('fs'),
     path = require('path'),
     mkdirp = require('mkdirp'),
-    srcDir = 'src/js',
-    distDir = 'dist/js/',
+    dist = 'dist/',
     cssDir = 'assets/css/'
     ;
 
-if (!fs.existsSync(srcDir))
+if (!fs.existsSync(dist))
 {
-    mkdirp(srcDir);
+    mkdirp(dist);
 }
 
-if (!fs.existsSync(distDir))
-{
-    mkdirp(distDir);
-}
-
-var srcPath = path.join(__dirname, '/src/js'),
-    distPath = path.join(__dirname, '/dist/js');
+var distPath = path.join(__dirname, dist);
 
 module.exports = {
   watch: true,  
-  entry: ['./load.js', './assets/css/scss/style.scss'],
+  entry: ['./load.js','./assets/css/scss/style.scss'],
   output: {
-    path: distPath,
-    filename: 'bundle.js'
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, distPath)
   },
   module: {
     rules: [{
@@ -34,22 +28,17 @@ module.exports = {
           {
             loader: "file-loader",
             options: {
-                name: "style.css",
-                outputPath: cssDir
+                name: "/assets/css/style.css"
             }
           },
           {
             loader: "css-loader"
           },
-          /*
-          {
-            loader: "postcss-loader"
-          },
-          */
           {
             loader: "sass-loader"
           }
       ]
     }]
-  }
+  },
+  
 }
