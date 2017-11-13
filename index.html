@@ -16,7 +16,6 @@
           xhr.send(null);
           var xml = xhr.responseXML;
           var entries = xml.getElementsByTagName("entry");
-          console.log(entries.length);
           for ( var i = 0; i <= entries.length; i++ )
           {
               var startTime = new Date(entries[i].querySelector("availability").getAttribute("start")).getTime();
