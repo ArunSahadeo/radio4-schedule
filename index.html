@@ -16,7 +16,7 @@
           xhr.send(null);
           var xml = xhr.responseXML;
           var entries = xml.getElementsByTagName("entry");
-          for ( var i = 0; i <= entries.length; i++ )
+          for ( var i = 0; i < entries.length; i++ )
           {
               var startTime = new Date(entries[i].querySelector("availability").getAttribute("start")).getTime();
               var endTime = new Date(entries[i].querySelector("availability").getAttribute("end")).getTime();
@@ -25,7 +25,6 @@
                   document.write(entries[i].querySelector("title").childNodes[0].nodeValue + "<br />");
                   break;
               }
-              else continue;
           }
       </script>
   </body>
