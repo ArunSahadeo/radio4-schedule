@@ -1,5 +1,4 @@
 var webpack = require('webpack'),
-    ExtractTextPlugin = require('extract-text-webpack-plugin'),
     fs = require('fs'),
     path = require('path'),
     mkdirp = require('mkdirp'),
