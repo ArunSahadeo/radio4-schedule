@@ -1,4 +1,5 @@
 var webpack = require('webpack'),
+    ExtractTextPlugin = require('extract-text-webpack-plugin'),
     fs = require('fs'),
     path = require('path'),
     mkdirp = require('mkdirp'),
@@ -22,22 +23,15 @@ module.exports = {
   },
   module: {
     rules: [{
-      test: /\.scss$/,
-      use: [
-          {
-            loader: "file-loader",
-            options: {
-                name: "/assets/css/style.css"
-            }
-          },
-          {
-            loader: "css-loader"
-          },
-          {
-            loader: "sass-loader"
-          }
-      ]
-    }]
+        test: /\.(sass|scss)$/,
+        loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
+      }]
   },
+  plugins: [
+    new ExtractTextPlugin({
+        filename: '/assets/css/style.css',
+        allChunks: true,
+    }),
+  ],
   
 }
