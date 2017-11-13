@@ -11,11 +11,13 @@
           var currentDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + ("0" + date.getDate()).slice(-2);
           var xhr = new XMLHttpRequest();
           xhr.overrideMimeType("text/xml");
-          xhr.open("GET", "file:///var/www/radio4-schedule/radio4.xml", false);
+          xhr.open("GET", "http://www.bbc.co.uk/radio/aod/availability/radio4.xml", false);
+          xhr.setRequestHeader("Cache-Control", "private, " + (60 * 60 * 24 * 10 ));
           xhr.send(null);
           var xml = xhr.responseXML;
           var entries = xml.getElementsByTagName("entry");
-          for ( var i = 0; i < entries.length; i++ )
+          console.log(entries.length);
+          for ( var i = 0; i <= entries.length; i++ )
           {
               var startTime = new Date(entries[i].querySelector("availability").getAttribute("start")).getTime();
               var endTime = new Date(entries[i].querySelector("availability").getAttribute("end")).getTime();
