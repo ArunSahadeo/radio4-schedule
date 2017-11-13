@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <script>
-          var date = new Date();
-          var currentTime = date.getTime();
-          var currentDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + ("0" + date.getDate()).slice(-2);
-          var xhr = new XMLHttpRequest();
-          xhr.overrideMimeType("text/xml");
-          xhr.open("GET", "http://www.bbc.co.uk/radio/aod/availability/radio4.xml", false);
-          xhr.setRequestHeader("Cache-Control", "private, " + (60 * 60 * 24 * 10 ));
-          xhr.send(null);
-          var xml = xhr.responseXML;
-          var entries = xml.getElementsByTagName("entry");
-          for ( var i = 0; i < entries.length; i++ )
-          {
-              var startTime = new Date(entries[i].querySelector("availability").getAttribute("start")).getTime();
-              var endTime = new Date(entries[i].querySelector("availability").getAttribute("end")).getTime();
-              if (entries[i].querySelector("availability").getAttribute("start").includes(currentDate) === false) continue;
-              if (startTime > currentTime && endTime > currentTime) {
-                  document.write(entries[i].querySelector("title").childNodes[0].nodeValue + "<br />");
-                  break;
-              }
-          }
-      </script>
-  </body>
+        var date = new Date();
+        var tz = date.getTimezoneOffset() * 1000;
+        var currentTime = date.getTime();
+        var xhr = new XMLHttpRequest();
+        xhr.overrideMimeType("text/xml");
+        xhr.open("GET", "http://www.bbc.co.uk/radio/aod/availability/radio4.xml", false);
+        xhr.setRequestHeader("Cache-Control", "private, " + (60 * 60 * 24));
+        xhr.send(null);
+        var xml = xhr.responseXML;
+        const entry = Array.from(xml.getElementsByTagName("entry"))
+            .find(entry => {
+                const availability = entry.querySelector("broadcast");
+                var startTime = new Date(availability.getAttribute("start")).getTime() + tz;
+                var endTime = new Date(availability.getAttribute("end")).getTime() + tz;
+                return startTime < currentTime && endTime > currentTime;
+            });
+
+        document.write(
+            entry
+                ? entry.querySelector("title").childNodes[0].nodeValue + "<br />"
+                : "No information on the current broadcast"
+        );
+    </script>
+</body>
+
 </html>
