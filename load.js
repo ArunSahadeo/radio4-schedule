@@ -28,7 +28,7 @@ function init()
             return currentEntry;
         });
 
-    const upcomingEntry = Array.from(xml.getElementsByTagName("entry"))[currentEntryIndex + 2];
+    const upcomingEntry = Array.from(xml.getElementsByTagName("entry"))[parseInt(currentEntryIndex) + 2];
 
     var upcomingTitle = document.querySelector(".upcoming-title");
 
