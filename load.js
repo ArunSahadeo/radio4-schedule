@@ -2,72 +2,127 @@ window.onload = init();
 
 function init()
 {
-    var date = new Date();
-    var tz = date.getTimezoneOffset() * 1000;
-    var currentTime = date.getTime();
-    var xhr = new XMLHttpRequest();
-    xhr.overrideMimeType("text/xml");
-    xhr.open("GET", "http://www.bbc.co.uk/radio/aod/availability/radio4.xml", false);
-    xhr.setRequestHeader("Cache-Control", "private, " + (60 * 60 * 24));
-    xhr.send(null);
-    var xml = xhr.responseXML;
-    const entry = Array.from(xml.getElementsByTagName("entry"))
-        .find(entry => {
-            const availability = entry.querySelector("broadcast");
-            var startTime = new Date(availability.getAttribute("start")).getTime() + tz;
-            var endTime = new Date(availability.getAttribute("end")).getTime() + tz;
-            return startTime < currentTime && endTime > currentTime;
-        });
+    loadApp = new Radio();
+    loadApp.boot();
+}
 
-    const currentEntryIndex = Array.from(xml.getElementsByTagName("entry"))
-        .findIndex(currentEntryIndex => {
-            const availability = currentEntryIndex.querySelector("broadcast");
-            var startTime = new Date(availability.getAttribute("start")).getTime() + tz;
-            var endTime = new Date(availability.getAttribute("end")).getTime() + tz;
-            var currentEntry = startTime < currentTime && endTime > currentTime;
-            return currentEntry;
-        });
+function Radio()
+{
+    var self = this;
 
-    const upcomingEntry = Array.from(xml.getElementsByTagName("entry"))[parseInt(currentEntryIndex) + 2];
-
-    var upcomingTitle = document.querySelector(".upcoming-title");
-
-    upcomingTitle.innerText =
-        upcomingEntry
-            ? upcomingEntry.querySelector("title").childNodes[0].nodeValue
-            : "No information on the upcoming broadcast";
-
-    var upcomingDesc = document.querySelector(".upcoming-desc");
-
-    upcomingDesc.innerText =
-        upcomingEntry
-            ? upcomingEntry.querySelector("synopsis").childNodes[0].nodeValue
-            : "The upcoming broadcast has no description.";
-
-    var programmeTitle = document.getElementsByClassName("programme-title")[0];
-
-    programmeTitle.innerText =
-        entry
-            ? entry.querySelector("title").childNodes[0].nodeValue
-            : "No information on the current broadcast";
-
-    var programmeDesc = document.getElementsByClassName("programme-desc")[0];
-
-    programmeDesc.innerText =
-        entry
-            ? entry.querySelector("synopsis").childNodes[0].nodeValue
-            : "This broadcast has no description.";
-
-    if (entry && entry.querySelector("images > image"))
+    self.boot = function()
     {
-        var featuredImg = document.createElement("img");
-        featuredImg.setAttribute("src", entry.querySelector("images > image").textContent);
-        programmeTitle.parentNode.insertBefore(featuredImg, programmeTitle);
-    }
-    if (upcomingEntry && upcomingEntry.querySelector("images > image"))
-    {
-        var featuredImg = document.createElement("img");
-        featuredImg.setAttribute("src", upcomingEntry.querySelector("images > image").textContent);
-        upcomingTitle.parentNode.insertBefore(featuredImg, upcomingTitle);
+
+        function loadBlocks()
+        {
+            var date = new Date();
+            var tz = date.getTimezoneOffset() * 1000;
+            var currentTime = date.getTime();
+            var xhr = new XMLHttpRequest();
+            xhr.overrideMimeType("text/xml");
+            xhr.open("GET", "http://www.bbc.co.uk/radio/aod/availability/radio4.xml", false);
+            xhr.setRequestHeader("Cache-Control", "private, " + (60 * 60 * 24));
+            xhr.send(null);
+            var xml = xhr.responseXML;
+            const entry = Array.from(xml.getElementsByTagName("entry"))
+                .find(entry => {
+                    const availability = entry.querySelector("broadcast");
+                    var startTime = new Date(availability.getAttribute("start")).getTime() + tz;
+                    var endTime = new Date(availability.getAttribute("end")).getTime() + tz;
+                    return startTime < currentTime && endTime > currentTime;
+                });
+
+            const currentEntryIndex = Array.from(xml.getElementsByTagName("entry"))
+                .findIndex(currentEntryIndex => {
+                    const availability = currentEntryIndex.querySelector("broadcast");
+                    var startTime = new Date(availability.getAttribute("start")).getTime() + tz;
+                    var endTime = new Date(availability.getAttribute("end")).getTime() + tz;
+                    var currentEntry = startTime < currentTime && endTime > currentTime;
+                    return currentEntry;
+                });
+
+            const upcomingEntry = Array.from(xml.getElementsByTagName("entry"))[parseInt(currentEntryIndex) + 2];
+
+            var upcomingTitle = document.querySelector(".upcoming-title");
+
+            upcomingTitle.innerText =
+                upcomingEntry
+                    ? upcomingEntry.querySelector("title").childNodes[0].nodeValue
+                    : "No information on the upcoming broadcast";
+
+            if (upcomingTitle.innerText.length >= 33) upcomingTitle.classList.add("title-long");
+
+            var upcomingDesc = document.querySelector(".upcoming-desc");
+
+            upcomingDesc.innerText =
+                upcomingEntry
+                    ? upcomingEntry.querySelector("synopsis").childNodes[0].nodeValue
+                    : "The upcoming broadcast has no description.";
+
+            var programmeTitle = document.getElementsByClassName("programme-title")[0];
+
+            programmeTitle.innerText =
+                entry
+                    ? entry.querySelector("title").childNodes[0].nodeValue
+                    : "No information on the current broadcast";
+
+            var programmeDesc = document.getElementsByClassName("programme-desc")[0];
+
+            programmeDesc.innerText =
+                entry
+                    ? entry.querySelector("synopsis").childNodes[0].nodeValue
+                    : "This broadcast has no description.";
+
+            if (entry && entry.querySelector("images > image"))
+            {
+                var featuredImgContainer = document.createElement("div");
+                featuredImgContainer.setAttribute("class", "featured-img");
+                var featuredImg = document.createElement("img");
+                featuredImg.setAttribute("src", entry.querySelector("images > image").textContent);
+                programmeTitle.parentNode.insertBefore(featuredImgContainer, programmeTitle);
+                featuredImgContainer.appendChild(featuredImg);
+            }
+            if (upcomingEntry && upcomingEntry.querySelector("images > image"))
+            {
+                var featuredImgContainer = document.createElement("div");
+                featuredImgContainer.setAttribute("class", "featured-img");
+                var featuredImg = document.createElement("img");
+                featuredImg.setAttribute("src", upcomingEntry.querySelector("images > image").textContent);
+                upcomingTitle.parentNode.insertBefore(featuredImgContainer, upcomingTitle);
+                featuredImgContainer.appendChild(featuredImg);
+            }
+
+        }
+
+        function matchTitleHeights()
+        {
+            var titleHeights = [];
+            
+            document.querySelectorAll(".programme-title, .upcoming-title")
+                .forEach(function(element)
+                {
+                    titleHeights.push(window.getComputedStyle(element, false).getPropertyValue("height"));
+                });
+
+            var i = 0, titleArray = titleHeights.length;
+
+            for (i = 0; i < titleArray; i++) {
+                titleHeights[i] = titleHeights[i].replace("px", "");
+            }
+
+            var maxTitleHeight = (Math.max.apply(Math, titleHeights)) + "px";
+
+            document.querySelectorAll(".programme-title, .upcoming-title")
+                .forEach(function(element)
+                {
+                    element.style["margin-bottom"] = maxTitleHeight;
+                });
+
+        }
+
+
+            loadBlocks();
+            matchTitleHeights();
+            window.addEventListener("resize", matchTitleHeights);
     }
 }
