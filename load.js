@@ -19,6 +19,31 @@ function init()
             return startTime < currentTime && endTime > currentTime;
         });
 
+    const currentEntryIndex = Array.from(xml.getElementsByTagName("entry"))
+        .findIndex(currentEntryIndex => {
+            const availability = currentEntryIndex.querySelector("broadcast");
+            var startTime = new Date(availability.getAttribute("start")).getTime() + tz;
+            var endTime = new Date(availability.getAttribute("end")).getTime() + tz;
+            var currentEntry = startTime < currentTime && endTime > currentTime;
+            return currentEntry;
+        });
+
+    const upcomingEntry = Array.from(xml.getElementsByTagName("entry"))[currentEntryIndex + 2];
+
+    var upcomingTitle = document.querySelector(".upcoming-title");
+
+    upcomingTitle.innerText =
+        upcomingEntry
+            ? upcomingEntry.querySelector("title").childNodes[0].nodeValue
+            : "No information on the upcoming broadcast";
+
+    var upcomingDesc = document.querySelector(".upcoming-desc");
+
+    upcomingDesc.innerText =
+        upcomingEntry
+            ? upcomingEntry.querySelector("synopsis").childNodes[0].nodeValue
+            : "The upcoming broadcast has no description.";
+
     var programmeTitle = document.getElementsByClassName("programme-title")[0];
 
     programmeTitle.innerText =
@@ -38,5 +63,11 @@ function init()
         var featuredImg = document.createElement("img");
         featuredImg.setAttribute("src", entry.querySelector("images > image").textContent);
         programmeTitle.parentNode.insertBefore(featuredImg, programmeTitle);
+    }
+    if (upcomingEntry && upcomingEntry.querySelector("images > image"))
+    {
+        var featuredImg = document.createElement("img");
+        featuredImg.setAttribute("src", upcomingEntry.querySelector("images > image").textContent);
+        upcomingTitle.parentNode.insertBefore(featuredImg, upcomingTitle);
     }
 }
