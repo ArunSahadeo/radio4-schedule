@@ -4,13 +4,15 @@
   "description": "Simple app to display current Radio 4 programme",
   "main": "main.js",
   "scripts": {
-    "start": "node_modules/electron/dist/electron ."
+    "start": "node_modules/electron/dist/electron .",
+    "watch": "webpack --watch"
   },
   "author": "Arun Sahadeo",
   "license": "MIT",
   "devDependencies": {
     "css-loader": "^0.28.7",
     "electron": "^1.7.9",
+    "electron-reload": "^1.2.2",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.5",
     "node-sass": "^4.6.1",

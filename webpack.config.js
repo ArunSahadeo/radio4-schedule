@@ -15,7 +15,6 @@ if (!fs.existsSync(dist))
 var distPath = path.join(__dirname, dist);
 
 module.exports = {
-  watch: true,  
   entry: ['./load.js','./assets/css/scss/style.scss'],
   output: {
         filename: 'bundle.js',
@@ -31,7 +30,7 @@ module.exports = {
     new ExtractTextPlugin({
         filename: '/assets/css/style.css',
         allChunks: true,
-    }),
+    })
   ],
   
 }
