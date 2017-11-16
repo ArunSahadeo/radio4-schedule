@@ -7,13 +7,38 @@ html, body {
 
 .info-container {
     width: 500px;
-    height: 250px;
+    height: 400px;
     position: absolute;
     margin: auto;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    background: linear-gradient(red, blue);
+    h2 {
+        margin-bottom: 30px;
+    }
+}
 
+.info-content {
+    max-width: 300px;
+    img {
+        max-width: 300px;
+    }
+}
+
+.upcoming-sidebar {
+    max-width: 200px;
+    position: absolute;
+    margin: auto;
+    right: 50px;
+    top: 50%;
+    margin-right: 80px;
+    transform: translateY(-50%);
+    h2 {
+        margin-bottom: 30px;
+    }
+
+    img {
+        max-width: 300px;
+    }
 }
