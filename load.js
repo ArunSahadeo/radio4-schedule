@@ -43,7 +43,19 @@ function Radio()
 
             const upcomingEntry = Array.from(xml.getElementsByTagName("entry"))[parseInt(currentEntryIndex) + 2];
 
-            var upcomingTitle = document.querySelector(".upcoming-title");
+            var upcomingTitle = document.querySelector(".upcoming-title"),
+                upcomingDesc = document.querySelector(".upcoming-desc");
+                programmeTitle = document.querySelector(".programme-title");
+                programmeDesc = document.querySelector(".programme-desc");
+            
+            if ((new Date(xml.querySelector("schedule").getAttribute("updated")).getTime() + tz) < new Date())
+            {
+                upcomingTitle.innerText = "N/A";
+                upcomingDesc.innerText = "N/A";
+                programmeTitle.innerText = "N/A";
+                programmeDesc.innerText = "N/A";
+                return;
+            }
 
             upcomingTitle.innerText =
                 upcomingEntry
@@ -52,21 +64,18 @@ function Radio()
 
             if (upcomingTitle.innerText.length >= 33) upcomingTitle.classList.add("title-long");
 
-            var upcomingDesc = document.querySelector(".upcoming-desc");
 
             upcomingDesc.innerText =
                 upcomingEntry
                     ? upcomingEntry.querySelector("synopsis").childNodes[0].nodeValue
                     : "The upcoming broadcast has no description.";
 
-            var programmeTitle = document.getElementsByClassName("programme-title")[0];
 
             programmeTitle.innerText =
                 entry
                     ? entry.querySelector("title").childNodes[0].nodeValue
                     : "No information on the current broadcast";
 
-            var programmeDesc = document.getElementsByClassName("programme-desc")[0];
 
             programmeDesc.innerText =
                 entry
