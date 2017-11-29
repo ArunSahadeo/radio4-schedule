@@ -44,11 +44,12 @@ function Radio()
             const upcomingEntry = Array.from(xml.getElementsByTagName("entry"))[parseInt(currentEntryIndex) + 2];
 
             var upcomingTitle = document.querySelector(".upcoming-title"),
-                upcomingDesc = document.querySelector(".upcoming-desc");
-                programmeTitle = document.querySelector(".programme-title");
-                programmeDesc = document.querySelector(".programme-desc");
+                upcomingDesc = document.querySelector(".upcoming-desc"),
+                programmeTitle = document.querySelector(".programme-title"),
+                programmeDesc = document.querySelector(".programme-desc"),
+                lastUpdated = new Date(xml.querySelector("schedule").getAttribute("updated")).getTime();
             
-            if ((new Date(xml.querySelector("schedule").getAttribute("updated")).getTime() + tz) < new Date())
+            if ( (lastUpdated + 1000 * 60 * 60 * 24 * 7) + tz < new Date() )
             {
                 upcomingTitle.innerText = "N/A";
                 upcomingDesc.innerText = "N/A";
