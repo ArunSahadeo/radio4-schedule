@@ -48,6 +48,9 @@ function Radio()
                 programmeTitle = document.querySelector(".programme-title"),
                 programmeDesc = document.querySelector(".programme-desc"),
                 lastUpdated = new Date(xml.querySelector("schedule").getAttribute("updated")).getTime();
+
+            const remainingMs = (new Date(upcomingEntry.querySelector("broadcast").getAttribute("start")).getTime() + tz) - (new Date().getTime() + tz);
+            const diffMins = Math.round(((remainingMs % 86400000 % 3600000)) / 60000);
             
             if ( (lastUpdated + 1000 * 60 * 60 * 24 * 7) + tz < new Date() )
             {
@@ -70,7 +73,16 @@ function Radio()
                 upcomingEntry
                     ? upcomingEntry.querySelector("synopsis").childNodes[0].nodeValue
                     : "The upcoming broadcast has no description.";
-
+ 
+            if (diffMins > 1)
+            {
+                var upcomingTime = document.createElement("p");
+                var strongTags = document.createElement("strong");
+                strongTags.innerText = "Time remaining is " + diffMins + " minutes";
+                upcomingTime.setAttribute("class", "upcoming-time");
+                upcomingTime.appendChild(strongTags);
+                upcomingDesc.parentNode.insertBefore(upcomingTime, upcomingDesc.nextSibling);
+            }
 
             programmeTitle.innerText =
                 entry
@@ -82,6 +94,7 @@ function Radio()
                 entry
                     ? entry.querySelector("synopsis").childNodes[0].nodeValue
                     : "This broadcast has no description.";
+
 
             if (entry && entry.querySelector("images > image"))
             {
