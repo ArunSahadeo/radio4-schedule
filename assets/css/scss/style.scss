@@ -29,6 +29,7 @@ html, body {
 
 .upcoming-sidebar {
     max-width: 200px;
+    height: 400px;
     position: absolute;
     margin: auto;
     right: 50px;
@@ -36,6 +37,7 @@ html, body {
     margin-right: 80px;
     transform: translateY(-50%);
     h2 {
+        margin-top: 40px;
         margin-bottom: 30px;
     }
 
