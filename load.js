@@ -41,7 +41,7 @@ function Radio()
                     return currentEntry;
                 });
 
-            const upcomingEntry = Array.from(xml.getElementsByTagName("entry"))[parseInt(currentEntryIndex) + 2];
+            const upcomingEntry = currentEntryIndex == -1 ? 'Ja' : Array.from(xml.getElementsByTagName("entry"))[parseInt(currentEntryIndex) + 2];
 
             var upcomingTitle = document.querySelector(".upcoming-title"),
                 upcomingDesc = document.querySelector(".upcoming-desc"),
@@ -78,7 +78,7 @@ function Radio()
             {
                 var upcomingTime = document.createElement("p");
                 var strongTags = document.createElement("strong");
-                strongTags.innerText = "Time remaining is " + diffMins + " minutes";
+                strongTags.innerText = "This programme will air in " + diffMins + " minutes";
                 upcomingTime.setAttribute("class", "upcoming-time");
                 upcomingTime.appendChild(strongTags);
                 upcomingDesc.parentNode.insertBefore(upcomingTime, upcomingDesc.nextSibling);
