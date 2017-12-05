@@ -1,8 +1,12 @@
+$modalBlue: #0E3868;
+$bgBlue: #47698D;
+
 html, body {
     margin: 0;
     padding: 0;
     min-height: 100%;
     width: 100%;
+    background-color: $bgBlue;
 }
 
 .info-container {
@@ -51,6 +55,7 @@ html, body {
     height: 135px;
     img {
         border: 1px solid #000;
+        max-height: 112px;
     }
 }  
 
@@ -69,6 +74,18 @@ html, body {
         padding: 20px;
         margin: 25% auto;
         z-index: 9999;
-        background: red;
+        background: rgba($modalBlue, .95);
+    }
+}
+
+.info-heading, .upcoming-heading
+{
+    background: $modalBlue;
+    max-width: 200px;
+    box-shadow: 0px 4px 19px #000;
+    h2 
+    { 
+        padding: 10px 15px;
+        color: #fff;
     }
 }
