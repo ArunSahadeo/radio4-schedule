@@ -138,7 +138,7 @@ function Radio()
             document.querySelectorAll(".programme-title, .upcoming-title")
                 .forEach(function(element)
                 {
-                    element.style["margin-bottom"] = maxTitleHeight;
+                    element.style["height"] = maxTitleHeight;
                 });
 
         }
