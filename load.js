@@ -51,7 +51,14 @@ function Radio()
 
             const remainingMs = (new Date(upcomingEntry.querySelector("broadcast").getAttribute("start")).getTime() + tz) - (new Date().getTime() + tz);
             const diffMins = Math.round(((remainingMs % 86400000 % 3600000)) / 60000);
-            
+
+            function interimModal()
+            {
+                var modal = document.querySelector(".interim-modal").classList.add("show");
+            }
+
+            if (diffMins <= 0) interimModal();
+
             if ( (lastUpdated + 1000 * 60 * 60 * 24 * 7) + tz < new Date() )
             {
                 upcomingTitle.innerText = "N/A";
