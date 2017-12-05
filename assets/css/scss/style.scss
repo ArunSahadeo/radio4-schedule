@@ -99,3 +99,8 @@ html, body {
 {
     max-width: 200px;
 }
+
+.programme-title, .upcoming-title
+{
+    @extend .programme-desc;
+}
