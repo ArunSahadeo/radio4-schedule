@@ -55,6 +55,11 @@ function Radio()
             function interimModal()
             {
                 var modal = document.querySelector(".interim-modal").classList.add("show");
+                document.querySelectorAll(".info-container, .upcoming-sidebar")
+                .forEach(function(element)
+                {
+                    element.classList.add("hide");
+                });
             }
 
             if (diffMins <= 0) interimModal();

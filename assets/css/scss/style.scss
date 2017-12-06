@@ -83,6 +83,10 @@ html, body {
     }
 }
 
+.info-container, .upcoming-sidebar {
+    &.hide { display: none; }
+}
+
 .info-heading, .upcoming-heading
 {
     background: $modalBlue;
