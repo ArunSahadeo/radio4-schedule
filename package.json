@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node_modules/electron/dist/electron .",
     "watch": "webpack --watch",
-    "build-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.cns --prune=true --out=release-builds",
+    "build-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --no-prune --out=release-builds",
     "build-win": "electron-packager . radio4-schedule --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --no-prune --out=release-builds --version-string.CompanyName=AS --version-string.FileDescription=AS --version-string.ProductName=\"Radio 4 Schedule\"",
     "build-linux": "electron-packager . radio4-schedule build-with-native-modules --overwrite --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --asar=true --no-prune --out=release-builds"
   },
@@ -23,5 +23,9 @@
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.0",
     "webpack": "^3.8.1"
+  },
+  "dependencies": {
+    "electron-packager": "^10.1.0",
+    "g": "^2.0.1"
   }
 }
