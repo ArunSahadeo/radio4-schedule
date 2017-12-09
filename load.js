@@ -32,16 +32,7 @@ function Radio()
                     return startTime < currentTime && endTime > currentTime;
                 });
 
-            const currentEntryIndex = Array.from(xml.getElementsByTagName("entry"))
-                .findIndex(currentEntryIndex => {
-                    const availability = currentEntryIndex.querySelector("broadcast");
-                    var startTime = new Date(availability.getAttribute("start")).getTime() + tz;
-                    var endTime = new Date(availability.getAttribute("end")).getTime() + tz;
-                    var currentEntry = startTime < currentTime && endTime > currentTime;
-                    return currentEntry;
-                });
-
-            const upcomingEntry = currentEntryIndex == -1 ? false : Array.from(xml.getElementsByTagName("entry"))[parseInt(currentEntryIndex) + 2];
+            const upcomingEntry = entry.nextElementSibling.nextElementSibling;
 
             var upcomingTitle = document.querySelector(".upcoming-title"),
                 upcomingDesc = document.querySelector(".upcoming-desc"),
