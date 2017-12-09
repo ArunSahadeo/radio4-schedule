@@ -41,7 +41,7 @@ function Radio()
                     return currentEntry;
                 });
 
-            const upcomingEntry = currentEntryIndex == -1 ? 'Ja' : Array.from(xml.getElementsByTagName("entry"))[parseInt(currentEntryIndex) + 2];
+            const upcomingEntry = currentEntryIndex == -1 ? false : Array.from(xml.getElementsByTagName("entry"))[parseInt(currentEntryIndex) + 2];
 
             var upcomingTitle = document.querySelector(".upcoming-title"),
                 upcomingDesc = document.querySelector(".upcoming-desc"),
