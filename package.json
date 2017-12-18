@@ -4,7 +4,7 @@
   "description": "Simple app to display current Radio 4 programme",
   "main": "main.js",
   "scripts": {
-    "start": "node_modules/electron/dist/electron .",
+    "start": "electron .",
     "watch": "webpack --watch",
     "build-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --no-prune --out=release-builds",
     "build-win": "electron-packager . radio4-schedule --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --no-prune --out=release-builds --version-string.CompanyName=AS --version-string.FileDescription=AS --version-string.ProductName=\"Radio 4 Schedule\"",
