@@ -24,13 +24,15 @@ function Radio()
             xhr.setRequestHeader("Cache-Control", "private, " + (60 * 60 * 24));
             xhr.send(null);
             var xml = xhr.responseXML;
-            const entry = Array.from(xml.getElementsByTagName("entry"))
-                .find(entry => {
-                    const availability = entry.querySelector("broadcast");
+            let allEntries = Array.from(xml.getElementsByTagName("entry"))
+                .filter(singleEntry => {
+                    const availability = singleEntry.querySelector("broadcast");
                     var startTime = new Date(availability.getAttribute("start")).getTime() + tz;
                     var endTime = new Date(availability.getAttribute("end")).getTime() + tz;
                     return startTime < currentTime && endTime > currentTime;
                 });
+            
+            const entry = allEntries[1] ? allEntries[1] : allEntries[0];
 
             const upcomingEntry = entry.nextElementSibling.nextElementSibling;
 
