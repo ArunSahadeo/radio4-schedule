@@ -55,7 +55,7 @@ function Radio()
                 });
             }
 
-            if (diffMins <= 0) interimModal();
+            if (diffMins <= 1) interimModal();
 
             if ( (lastUpdated + 1000 * 60 * 60 * 24 * 7) + tz < new Date() )
             {
