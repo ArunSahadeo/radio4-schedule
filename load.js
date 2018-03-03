@@ -151,19 +151,29 @@ function Radio()
 
             if (entry && entry.querySelector("images > image"))
             {
+                var programmeThumb = entry.querySelector("images > image").textContent;
+                if (programmeThumb.includes("http") && !programmeThumb.includes("https"))
+                {
+                    programmeThumb = programmeThumb.replace("http", "https");
+                }
                 var featuredImgContainer = document.createElement("div");
                 featuredImgContainer.setAttribute("class", "featured-img");
                 var featuredImg = document.createElement("img");
-                featuredImg.setAttribute("src", entry.querySelector("images > image").textContent);
+                featuredImg.setAttribute("src", programmeThumb);
                 programmeTitle.parentNode.insertBefore(featuredImgContainer, programmeTitle);
                 featuredImgContainer.appendChild(featuredImg);
             }
             if (upcomingEntry && upcomingEntry.querySelector("images > image"))
             {
+                var programmeThumb = upcomingEntry.querySelector("images > image").textContent;
+                if (programmeThumb.includes("http") && !programmeThumb.includes("https"))
+                {
+                    programeThumb = programmeThumb.replace("http", "https");
+                }
                 var featuredImgContainer = document.createElement("div");
                 featuredImgContainer.setAttribute("class", "featured-img");
                 var featuredImg = document.createElement("img");
-                featuredImg.setAttribute("src", upcomingEntry.querySelector("images > image").textContent);
+                featuredImg.setAttribute("src", programmeThumb);
                 upcomingTitle.parentNode.insertBefore(featuredImgContainer, upcomingTitle);
                 featuredImgContainer.appendChild(featuredImg);
             }
