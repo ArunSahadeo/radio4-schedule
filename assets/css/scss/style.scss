@@ -9,6 +9,15 @@ html, body {
     background-color: $bgBlue;
 }
 
+ul
+{
+    padding: 0;
+    li
+    {
+        max-width: 80%;
+    }
+}
+
 .info-container {
     width: 650px;
     height: 500px;
@@ -107,4 +116,11 @@ html, body {
 .programme-title, .upcoming-title
 {
     @extend .programme-desc;
+}
+
+.title-long
+{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }

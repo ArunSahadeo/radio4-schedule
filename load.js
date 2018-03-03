@@ -10,6 +10,12 @@ function Radio()
 {
     var self = this;
 
+    self.getStyle = function(elem, prop)
+    {
+        var elemStyles = window.getComputedStyle(elem);
+        return elemStyles.getPropertyValue(prop) || false;
+    };
+
     self.boot = function()
     {
 
@@ -48,12 +54,54 @@ function Radio()
             function interimModal()
             {
                 var modal = document.querySelector(".interim-modal").classList.add("show");
-                document.querySelectorAll(".info-container, .upcoming-sidebar")
+                document.querySelectorAll(".info-container, .upcoming-sidebar, .list-upcoming")
                 .forEach(function(element)
                 {
                     element.classList.add("hide");
                 });
             }
+
+            function setListHeight()
+            {
+                var upcomingList = document.getElementsByClassName('list-upcoming')[0];
+                upcomingList.style['marginTop'] = "calc(" + self.getStyle(document.getElementsByClassName('upcoming-sidebar')[0], 'height') + " + 100px)";
+                upcomingList.style['marginLeft'] = self.getStyle(document.getElementsByClassName('info-container')[0], 'margin-left');
+            }
+
+            setListHeight();
+            window.addEventListener("resize", setListHeight);
+
+            function populateListContent()
+            {
+                const availability = upcomingEntry.querySelector("broadcast");
+                var startTime = new Date(availability.getAttribute("start")).getTime() + tz;
+                
+                let entries = Array.from(xml.getElementsByTagName("entry"));
+
+                let futureEntries = entries.filter(entry => {
+                    let entryAvailability = entry.querySelector("broadcast");
+                    let entryTime = new Date(entryAvailability.getAttribute("start"));
+                    return (entryTime.getTime() + tz) > startTime && entryTime.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0);
+                });
+
+                if (!futureEntries.length) return;
+
+                let futureEntriesList = "<ul>\n";
+
+                futureEntries.forEach(function(element)
+                {
+                    let futureItem = element.querySelector("title").textContent;
+                    futureItem += (": " + element.querySelector("synopsis").textContent);
+                    futureEntriesList += ("<li>" + futureItem + "</li>\n");
+                });
+
+                futureEntriesList += "</ul>";
+
+                document.querySelector(".list-upcoming").innerHTML = futureEntriesList;
+
+            }
+
+            populateListContent();
 
             if (diffMins <= 1) interimModal();
 
