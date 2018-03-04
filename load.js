@@ -119,7 +119,11 @@ function Radio()
                     ? upcomingEntry.querySelector("title").childNodes[0].nodeValue
                     : "No information on the upcoming broadcast";
 
-            if (upcomingTitle.innerText.length >= 33) upcomingTitle.classList.add("title-long");
+            if (upcomingTitle.innerText.length >= 33)
+            {
+                upcomingTitle.classList.add("title-long")
+                upcomingTitle.setAttribute("title", upcomingTitle.innerText);
+            };
 
 
             upcomingDesc.innerText =
