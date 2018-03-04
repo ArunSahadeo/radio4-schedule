@@ -7,9 +7,13 @@
 </head>
 
 <body>
-    <div class="interim-modal">
+    <div class="base-modal" id="interim-modal">
         <div class="modal-inner">
             <h3>Currently updating schedule information&hellip;</h3>
+        </div>
+    </div>
+    <div class="base-modal" id="scheduled-list-modal">
+        <div class="modal-inner">
         </div>
     </div>
 
@@ -31,6 +35,8 @@
     </div>
 
     <div class="list-upcoming">
+        <p>
+            <a href="#" class="modal-btn" data-modal="scheduled-list-modal">View other</a></p>
     </div>
 
     <script src="dist/bundle.js"></script>

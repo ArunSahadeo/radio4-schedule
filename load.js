@@ -53,7 +53,7 @@ function Radio()
 
             function interimModal()
             {
-                var modal = document.querySelector(".interim-modal").classList.add("show");
+                var modal = document.querySelector("#interim-modal").classList.add("show");
                 document.querySelectorAll(".info-container, .upcoming-sidebar, .list-upcoming")
                 .forEach(function(element)
                 {
@@ -97,7 +97,7 @@ function Radio()
 
                 futureEntriesList += "</ul>";
 
-                document.querySelector(".list-upcoming").innerHTML = futureEntriesList;
+                document.querySelector("#scheduled-list-modal .modal-inner").innerHTML = futureEntriesList;
 
             }
 
@@ -206,9 +206,23 @@ function Radio()
 
         }
 
+        function upcomingModal(event)
+        {
+            event.preventDefault();
+            let modalID = this.dataset.modal;
+            let upcomingModal = document.getElementById(modalID);
+            if (!upcomingModal.classList.contains("show"))
+            {
+                upcomingModal.classList.add("show");
+            }
+        }
+
 
             loadBlocks();
             matchTitleHeights();
             window.addEventListener("resize", matchTitleHeights);
+            let modalBtn = document.querySelector(".modal-btn");
+            modalBtn.addEventListener("click", upcomingModal);
+            
     }
 }
