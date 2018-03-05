@@ -97,7 +97,7 @@ function Radio()
 
                 futureEntriesList += "</ul>";
 
-                document.querySelector("#scheduled-list-modal .modal-inner").innerHTML = futureEntriesList;
+                document.querySelector("#scheduled-list-modal .modal-inner").innerHTML += futureEntriesList;
 
             }
 
@@ -227,6 +227,18 @@ function Radio()
             window.addEventListener("resize", matchTitleHeights);
             let modalBtn = document.querySelector(".modal-btn");
             modalBtn.addEventListener("click", upcomingModal);
+			let modalClose = document.querySelector(".modal-close");
+			modalClose.addEventListener("click", function(){
+				if (!this.parentNode.classList.contains("modal-inner")) return;
+				let modalInner = this.parentNode;
+				if (!modalInner.parentNode.classList.contains("base-modal")) return;
+				let parentModal = modalInner.parentNode;
+				if (parentModal.classList.contains("show"))
+				{
+					parentModal.classList.remove("show");
+				}
+			});
+
             
     }
 }

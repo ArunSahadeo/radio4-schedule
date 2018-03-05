@@ -30,6 +30,13 @@ a
         color: #fff;
         border-radius: 2px;
     }
+	&.modal-close
+	{
+		color: #fff;
+		position: absolute;
+		right: 15px;
+		top: 0;
+	}
 }
 
 .info-container {
