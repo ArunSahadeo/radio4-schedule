@@ -63,8 +63,10 @@ function Radio()
 
             function setListHeight()
             {
-                var upcomingList = document.getElementsByClassName('list-upcoming')[0];
-                upcomingList.style['marginTop'] = "calc(" + self.getStyle(document.getElementsByClassName('upcoming-sidebar')[0], 'height') + " + 100px)";
+				var upcomingList = document.getElementsByClassName('list-upcoming')[0],
+					listHeight = self.getStyle(document.getElementsByClassName('info-container')[0], 'height'),
+					listMarginTop = self.getStyle(document.getElementsByClassName('info-container')[0], 'margin-top');
+                upcomingList.style['marginTop'] = parseInt(listHeight.replace('px', '')) + parseInt(listMarginTop.replace('px', '')) + 'px';
                 upcomingList.style['marginLeft'] = self.getStyle(document.getElementsByClassName('info-container')[0], 'margin-left');
             }
 
