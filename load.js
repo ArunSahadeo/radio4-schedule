@@ -64,10 +64,13 @@ function Radio()
             function setListHeight()
             {
 				var upcomingList = document.getElementsByClassName('list-upcoming')[0],
-					listHeight = self.getStyle(document.getElementsByClassName('info-container')[0], 'height'),
-					listMarginTop = self.getStyle(document.getElementsByClassName('info-container')[0], 'margin-top');
-                upcomingList.style['marginTop'] = parseInt(listHeight.replace('px', '')) + parseInt(listMarginTop.replace('px', '')) + 'px';
+					upcomingTime = document.getElementsByClassName('upcoming-time')[0],
+					listHeight = (document.getElementsByClassName('info-container')[0]).offsetHeight,
+					listMarginTop = self.getStyle(document.getElementsByClassName('info-container')[0], 'margin-top'),
+					upcomingTimeMarginTop = self.getStyle(upcomingTime, 'margin-top');
+                upcomingList.style['marginTop'] = parseInt(listHeight) + parseInt(listMarginTop.replace('px', '')) + 'px';
                 upcomingList.style['marginLeft'] = self.getStyle(document.getElementsByClassName('info-container')[0], 'margin-left');
+				(upcomingList.querySelector('p')).style['marginTop'] = upcomingTimeMarginTop;
             }
 
             setListHeight();
@@ -135,12 +138,10 @@ function Radio()
  
             if (diffMins > 1)
             {
-                var upcomingTime = document.createElement("p");
+                var upcomingTime = document.querySelector("p.upcoming-time");
                 var strongTags = document.createElement("strong");
                 strongTags.innerText = "This programme will air in " + diffMins + " minutes";
-                upcomingTime.setAttribute("class", "upcoming-time");
                 upcomingTime.appendChild(strongTags);
-                upcomingDesc.parentNode.insertBefore(upcomingTime, upcomingDesc.nextSibling);
             }
 
             programmeTitle.innerText =
