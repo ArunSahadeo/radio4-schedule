@@ -10,6 +10,11 @@ function Radio()
 {
     var self = this;
 
+	Element.prototype.remove = function()
+	{
+		this.parentElement.removeChild(this);
+	};
+
     self.getStyle = function(elem, prop)
     {
         var elemStyles = window.getComputedStyle(elem);
@@ -107,6 +112,24 @@ function Radio()
             }
 
             populateListContent();
+
+			function removeListDuplicates()
+			{
+				var modalList = document.querySelector("#scheduled-list-modal .modal-inner ul"),
+					duplicates = [];
+
+				Array.from(modalList.querySelectorAll("li")).forEach(function(listItem, index)
+				{
+					if ( duplicates.indexOf(listItem.textContent) > -1 )
+					{
+						modalList.removeChild(listItem)[index];
+					}
+
+					else duplicates.push(listItem.textContent);
+				});
+			}
+
+			removeListDuplicates();
 
             if (diffMins <= 1) interimModal();
 
