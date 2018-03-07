@@ -100,9 +100,12 @@ function Radio()
 
                 futureEntries.forEach(function(element)
                 {
-                    let futureItem = element.querySelector("title").textContent;
-                    futureItem += (": " + element.querySelector("synopsis").textContent);
-                    futureEntriesList += ("<li>" + futureItem + "</li>\n");
+					let futureItem = "<li><ul>\n";
+					let broadcastTime = element.querySelector("broadcast").getAttribute("start");
+					futureItem += ("<li>" + element.querySelector("title").textContent + "<br />" + element.querySelector("synopsis").textContent + "</li>\n");
+					futureItem += ("<li>Broadcast Time: " + new Date(broadcastTime) + "</li>\n");
+					futureItem += "</ul></li>\n";
+                    futureEntriesList += futureItem;
                 });
 
                 futureEntriesList += "</ul>";
@@ -116,17 +119,30 @@ function Radio()
 			function removeListDuplicates()
 			{
 				var modalList = document.querySelector("#scheduled-list-modal .modal-inner ul"),
+					nestedList = modalList.querySelectorAll("ul");
 					duplicates = [];
 
-				Array.from(modalList.querySelectorAll("li")).forEach(function(listItem, index)
+				Array.from(nestedList).forEach(function(listItem, index)
 				{
-					if ( duplicates.indexOf(listItem.textContent) > -1 )
-					{
-						modalList.removeChild(listItem)[index];
-					}
+					var listItem = listItem.querySelectorAll("li");
 
-					else duplicates.push(listItem.textContent);
+					Array.from(listItem).forEach(function(nestedItem)
+					{
+						if ( duplicates.indexOf(nestedItem.textContent) > -1 )
+						{
+							nestedList[index].removeChild(nestedItem);
+						}
+
+						else
+						{
+							duplicates.push(nestedItem.textContent);
+						}
+
+					});
+
+
 				});
+
 			}
 
 			removeListDuplicates();
