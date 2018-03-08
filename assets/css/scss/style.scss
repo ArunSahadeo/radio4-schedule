@@ -164,3 +164,21 @@ a
     overflow: hidden;
     white-space: nowrap;
 }
+
+@media (max-height: 595px)
+{
+	.list-upcoming
+	{
+		margin-top: 400px !important;
+		padding-top: 35px;
+	}
+	.info-container, .upcoming-sidebar
+	{
+		max-height: 50%;
+		margin-top: 0;
+	}
+	.upcoming-sidebar
+	{
+		top: 25%;
+	}
+}
