@@ -73,9 +73,18 @@ function Radio()
 					listHeight = (document.getElementsByClassName('info-container')[0]).offsetHeight,
 					listMarginTop = self.getStyle(document.getElementsByClassName('info-container')[0], 'margin-top'),
 					upcomingTimeMarginTop = self.getStyle(upcomingTime, 'margin-top');
+
                 upcomingList.style['marginTop'] = parseInt(listHeight) + parseInt(listMarginTop.replace('px', '')) + 'px';
-                upcomingList.style['marginLeft'] = self.getStyle(document.getElementsByClassName('info-container')[0], 'margin-left');
 				(upcomingList.querySelector('p')).style['marginTop'] = upcomingTimeMarginTop;
+
+				if (window.innerHeight < 595)
+				{
+					upcomingListPara = upcomingList.querySelector('p');
+					upcomingListPara.style.removeProperty('margin-top');
+					upcomingList.style['marginTop'] = ( parseInt( upcomingList.style['marginTop'].replace('px', '') ) - 30 ) + 'px';
+				}
+
+                upcomingList.style['marginLeft'] = self.getStyle(document.getElementsByClassName('info-container')[0], 'margin-left');
             }
 
             setListHeight();
