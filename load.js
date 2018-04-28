@@ -242,6 +242,7 @@ function Radio()
             document.querySelectorAll(".programme-title, .upcoming-title")
                 .forEach(function(element)
                 {
+					element.style.removeProperty('height');
                     titleHeights.push(window.getComputedStyle(element, false).getPropertyValue("height"));
                 });
 
