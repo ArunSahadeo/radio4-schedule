@@ -197,6 +197,12 @@ function Radio()
                     ? entry.querySelector("title").childNodes[0].nodeValue
                     : "No information on the current broadcast";
 
+            if (programmeTitle.innerText.length >= 43)
+            {
+                programmeTitle.classList.add("title-long")
+                programmeTitle.setAttribute("title", programmeTitle.innerText);
+            };
+
 
             programmeDesc.innerText =
                 entry
