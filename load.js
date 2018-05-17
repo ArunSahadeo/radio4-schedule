@@ -209,6 +209,11 @@ function Radio()
                     ? entry.querySelector("synopsis").childNodes[0].nodeValue
                     : "This broadcast has no description.";
 
+			if (programmeDesc.innerText.length >= 87)
+			{
+				programmeDesc.classList.add('title-long');
+				programmeDesc.setAttribute('title', programmeDesc.innerText);
+			}
 
             if (entry && entry.querySelector("images > image"))
             {
