@@ -1,36 +1,110 @@
-var webpack = require('webpack'),
-    ExtractTextPlugin = require('extract-text-webpack-plugin'),
-    fs = require('fs'),
-    path = require('path'),
-    mkdirp = require('mkdirp'),
-    dist = 'dist/',
-    cssDir = 'assets/css/'
-    ;
+const
+	devMode = process.env.NODE_ENV != 'production',
+	path = require('path'),
+	dist = path.join(__dirname, 'dist'),
+	FileManagerPlugin = require('filemanager-webpack-plugin'),
+	MiniCSSExtractPlugin = require('mini-css-extract-plugin'),
+	UglifyJSPlugin = require('uglifyjs-webpack-plugin'),
+	webpack = require('webpack')
+;
 
-if (!fs.existsSync(dist))
-{
-    mkdirp(dist);
-}
+// Define dirs
 
-var distPath = path.join(__dirname, dist);
+const
+	scriptDir = './assets/js',
+	styleDir = './assets/scss'
+;
+
+// Define paths
+
+const paths = {
+	scripts: [
+		scriptDir + '/load.js'
+	],
+
+	styles: [
+		styleDir + '/style.scss'
+	]
+};
 
 module.exports = {
-  entry: ['./load.js','./assets/css/scss/style.scss'],
-  output: {
-        filename: 'bundle.js',
-        path: path.resolve(__dirname, distPath)
-  },
-  module: {
-    rules: [{
-        test: /\.(sass|scss)$/,
-        loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
-      }]
-  },
-  plugins: [
-    new ExtractTextPlugin({
-        filename: '/assets/css/style.css',
-        allChunks: true,
-    })
-  ],
-  
-}
+	target: 'web',
+
+	entry: {
+		'scripts.min.js': paths.scripts,
+		'style': paths.styles
+	},
+
+	output: {
+		filename: '[name]',
+		path: dist
+	},
+
+	module: {
+		rules: [
+			{
+				test: /\.js(x)?$/,
+				exclude: /node_modules/,
+				loader: 'babel-loader'
+			},
+			{
+				test: /\.s(c|a)ss$/,
+				use: [
+					MiniCSSExtractPlugin.loader,
+					'css-loader',
+					'sass-loader'	
+				],
+			},
+			{
+				test: /\.json$/,
+				exclude: /\./,
+				include: /assets\/js/,
+				loader: 'json-loader'
+			},
+			{
+				test: /\.css$/,
+				use: [
+					MiniCSSExtractPlugin.loader,
+					'css-loader',
+				],
+			},
+			{
+				test: /\.(gif|png|jpe?g|svg|ttf)$/,
+				use: [{
+					loader: 'file-loader',
+					options: {
+						name: '[name].[ext]'
+					}
+				}]
+			},
+		]
+	},
+
+	optimization: {
+		minimize: true,
+		minimizer: [new UglifyJSPlugin({
+			include: /\.min\.js$/
+		})],
+	},
+
+	plugins: [
+		new MiniCSSExtractPlugin({
+			filename: '[name].css',
+			chunkFilename: '[name].css'
+		}),
+
+		new FileManagerPlugin({
+			onStart: {
+				delete: [
+					dist + '/*'
+				]
+			},
+
+			onEnd: {
+				delete: [
+					dist + '/style',
+				]
+			}
+		}),
+	]
+};
