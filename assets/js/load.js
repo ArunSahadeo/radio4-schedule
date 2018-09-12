@@ -30,10 +30,36 @@ function Radio()
             var tz = date.getTimezoneOffset() * 1000;
             var currentTime = date.getTime();
             var xhr = new XMLHttpRequest();
+            var shouldContinue = true;
+
+            xhr.onload = function () {
+                if (this.status === 404)
+                {
+                    var currentSidebar = document.querySelector(".info-container"),
+                        upcomingSidebar = document.querySelector(".upcoming-sidebar"),
+                        upcomingList = document.querySelector(".list-upcoming"),
+                        serviceDownModal = document.querySelector("#service-down-modal");
+
+                    currentSidebar.style.display = "none";
+                    upcomingSidebar.style.display = "none";
+                    upcomingList.style.display = "none";
+
+                    serviceDownModal.classList.add("show");
+
+                    shouldContinue = false;
+                }
+            };
+
             xhr.overrideMimeType("text/xml");
             xhr.open("GET", "http://www.bbc.co.uk/radio/aod/availability/radio4.xml", false);
             xhr.setRequestHeader("Cache-Control", "private, " + (60 * 60 * 24));
             xhr.send(null);
+
+            if (!shouldContinue)
+            {
+                return;            
+            }
+
             var xml = xhr.responseXML;
             let allEntries = Array.from(xml.getElementsByTagName("entry"))
                 .filter(singleEntry => {
