@@ -134,43 +134,47 @@ function Radio()
                 upcomingList.style['marginLeft'] = self.getStyle(document.getElementsByClassName('info-container')[0], 'margin-left');
             }
 
-            //setListHeight();
-            //window.addEventListener("resize", setListHeight);
+            setListHeight();
+            window.addEventListener("resize", setListHeight);
 
-            function populateListContent()
+            function populateListContent(activeProgrammes)
             {
-                const availability = upcomingEntry.querySelector("broadcast");
-                var startTime = new Date(availability.getAttribute("start")).getTime() + tz;
-                
-                let entries = Array.from(xml.getElementsByTagName("entry"));
+                const availability = upcomingEntry.querySelector(".broadcast__time").getAttribute("content");
+                var startTime = new Date(availability).getTime() + tz;
 
-                let futureEntries = entries.filter(entry => {
-                    let entryAvailability = entry.querySelector("broadcast");
-                    let entryTime = new Date(entryAvailability.getAttribute("start"));
-                    return (entryTime.getTime() + tz) > startTime && entryTime.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0);
+                let futureProgrammes = activeProgrammes.filter(activeProgramme => {
+                    let programmeStartTime = new Date(activeProgramme.querySelector(".broadcast__time").getAttribute("content"));
+                    return (programmeStartTime.getTime() + tz) > startTime && programmeStartTime.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0);
                 });
 
-                if (!futureEntries.length) return;
+                if (!futureProgrammes.length) return;
 
-                let futureEntriesList = "<ul>\n";
+                let futureProgrammesList = "<ul>\n";
 
-                futureEntries.forEach(function(element)
+                futureProgrammes.forEach(function(element)
                 {
 					let futureItem = "<li><ul>\n";
-					let broadcastTime = element.querySelector("broadcast").getAttribute("start");
-					futureItem += ("<li>" + element.querySelector("title").textContent + "<br />" + element.querySelector("synopsis").textContent + "</li>\n");
+					let broadcastTime = element.querySelector(".broadcast__time").getAttribute("content");
+                    var programmeTitle = element.querySelector(".programme__title").innerText;
+
+                    if (element.querySelector(".programme__subtitle"))
+                    {
+                        programmeTitle += ("<br />" + element.querySelector(".programme__subtitle").innerText);
+                    }
+
+                    futureItem += ("<li>" + programmeTitle + "<br />" + element.querySelector(".programme__synopsis").innerText + "</li>\n");
 					futureItem += ("<li>Broadcast Time: " + new Date(broadcastTime) + "</li>\n");
 					futureItem += "</ul></li>\n";
-                    futureEntriesList += futureItem;
+                    futureProgrammesList += futureItem;
                 });
 
-                futureEntriesList += "</ul>";
+                futureProgrammesList += "</ul>";
 
-                document.querySelector("#scheduled-list-modal .modal-inner").innerHTML += futureEntriesList;
+                document.querySelector("#scheduled-list-modal .modal-inner").innerHTML += futureProgrammesList;
 
             }
 
-            //populateListContent();
+            populateListContent(activeProgrammes);
 
 			function removeListDuplicates()
 			{
