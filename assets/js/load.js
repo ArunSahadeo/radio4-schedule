@@ -207,7 +207,7 @@ function Radio()
 
             upcomingTitle.innerText =
                 upcomingEntry
-                    ? upcomingEntry.querySelector(".programme__title").innerText
+                ?   `${upcomingEntry.querySelector('.programme__title').innerText}\n${upcomingEntry.querySelector('.programme__subtitle').innerText}`
                     : "No information on the upcoming broadcast";
 
             if (upcomingTitle.innerText.length >= 63)
@@ -232,7 +232,7 @@ function Radio()
 
             programmeTitle.innerText =
                 currentEntry
-                    ? currentEntry.querySelector(".programme__title").innerText
+                    ? `${currentEntry.querySelector('.programme__title').innerText}\n${currentEntry.querySelector('.programme__subtitle').innerText}`
                     : "No information on the current broadcast";
 
             if (programmeTitle.innerText.length >= 43)
@@ -255,11 +255,16 @@ function Radio()
 
             if (currentEntry && currentEntry.querySelector(".programme__img"))
             {
-                var programmeThumb = currentEntry.querySelector(".programme__img > img").dataset.src;
+                var programmeThumbSrcset = currentEntry.querySelector(".programme__img > img").dataset.srcset.split(",");
+                var programmeThumb = programmeThumbSrcset.slice(-1)[0];
+                programmeThumb = String(programmeThumb).trim();
+                programmeThumb = programmeThumb.match(/http(s)?:[/]{2,}(.*)\.jpg/g);
+
                 if (programmeThumb.includes("http") && !programmeThumb.includes("https"))
                 {
                     programmeThumb = programmeThumb.replace("http", "https");
                 }
+
                 var featuredImgContainer = document.createElement("div");
                 featuredImgContainer.setAttribute("class", "featured-img");
                 var featuredImg = document.createElement("img");
@@ -269,11 +274,16 @@ function Radio()
             }
             if (upcomingEntry && upcomingEntry.querySelector(".programme__img"))
             {
-                var programmeThumb = upcomingEntry.querySelector(".programme__img > img").dataset.src;
+                var programmeThumbSrcset = upcomingEntry.querySelector(".programme__img > img").dataset.srcset.split(",");
+                var programmeThumb = programmeThumbSrcset.slice(-1)[0];
+                programmeThumb = String(programmeThumb).trim();
+                programmeThumb = programmeThumb.match(/http(s)?:[/]{2,}(.*)\.jpg/g);
+
                 if (programmeThumb.includes("http") && !programmeThumb.includes("https"))
                 {
-                    programeThumb = programmeThumb.replace("http", "https");
+                    programmeThumb = programmeThumb.replace("http", "https");
                 }
+
                 var featuredImgContainer = document.createElement("div");
                 featuredImgContainer.setAttribute("class", "featured-img");
                 var featuredImg = document.createElement("img");
