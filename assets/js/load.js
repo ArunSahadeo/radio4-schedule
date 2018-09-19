@@ -29,6 +29,7 @@ function Radio()
             var date = new Date();
             var tz = date.getTimezoneOffset() * 1000;
             var currentTime = date.getTime();
+            var currentDay = date.getDay();
             var xhr = new XMLHttpRequest();
             var shouldContinue = true;
 
@@ -50,8 +51,8 @@ function Radio()
                 }
             };
 
-            xhr.overrideMimeType("text/xml");
-            xhr.open("GET", "http://www.bbc.co.uk/radio/aod/availability/radio4.xml", false);
+            xhr.overrideMimeType("text/html");
+            xhr.open("GET", "https://www.bbc.co.uk/schedules/p00fzl7j", false);
             xhr.setRequestHeader("Cache-Control", "private, " + (60 * 60 * 24));
             xhr.send(null);
 
@@ -60,26 +61,46 @@ function Radio()
                 return;            
             }
 
-            var xml = xhr.responseXML;
-            let allEntries = Array.from(xml.getElementsByTagName("entry"))
-                .filter(singleEntry => {
-                    const availability = singleEntry.querySelector("broadcast");
-                    var startTime = new Date(availability.getAttribute("start")).getTime() + tz;
-                    var endTime = new Date(availability.getAttribute("end")).getTime() + tz;
-                    return startTime < currentTime && endTime > currentTime;
-                });
-            
-            const entry = allEntries[1] ? allEntries[1] : allEntries[0];
+            const response = xhr.responseText,
+                  parser = new DOMParser();
 
-            const upcomingEntry = entry.nextElementSibling.nextElementSibling;
+            const html = parser.parseFromString(response, "text/html");
+
+            const entries = html.querySelectorAll('.highlight-box-wrapper li');
+
+            if (Array.from(entries).length < 1)
+            {
+                return;
+            }
+
+            const activeProgrammes = Array.from(entries).filter((entry, index) => {
+                const entryTimeElem = entry.querySelector('.broadcast__time');
+                const entryDate = new Date(entryTimeElem.getAttribute('content'));
+                const entryTime = entryDate.getTime();
+                const programmeDay = entryDate.getDay();
+                const nextEntry = entries[index + 1];
+
+                if (typeof nextEntry === 'undefined')
+                {
+                    return false;
+                }
+
+                const nextEntryTimeElem = nextEntry.querySelector('.broadcast__time');
+                const endTime = new Date(nextEntryTimeElem.getAttribute('content')).getTime();
+
+                return currentDay === programmeDay && endTime > currentTime;
+            });
+            
+            const currentEntry = activeProgrammes[0];
+
+            const upcomingEntry = activeProgrammes[1]; 
 
             var upcomingTitle = document.querySelector(".upcoming-title"),
                 upcomingDesc = document.querySelector(".upcoming-desc"),
                 programmeTitle = document.querySelector(".programme-title"),
-                programmeDesc = document.querySelector(".programme-desc"),
-                lastUpdated = new Date(xml.querySelector("schedule").getAttribute("updated")).getTime();
+                programmeDesc = document.querySelector(".programme-desc");
 
-            const remainingMs = (new Date(upcomingEntry.querySelector("broadcast").getAttribute("start")).getTime() + tz) - (new Date().getTime() + tz);
+            const remainingMs = (new Date(upcomingEntry.querySelector(".broadcast__time").getAttribute("content")).getTime() + tz) - (new Date().getTime() + tz);
             const diffMins = Math.round(((remainingMs % 86400000 % 3600000)) / 60000);
 
             function interimModal()
@@ -113,8 +134,8 @@ function Radio()
                 upcomingList.style['marginLeft'] = self.getStyle(document.getElementsByClassName('info-container')[0], 'margin-left');
             }
 
-            setListHeight();
-            window.addEventListener("resize", setListHeight);
+            //setListHeight();
+            //window.addEventListener("resize", setListHeight);
 
             function populateListContent()
             {
@@ -149,7 +170,7 @@ function Radio()
 
             }
 
-            populateListContent();
+            //populateListContent();
 
 			function removeListDuplicates()
 			{
@@ -180,22 +201,13 @@ function Radio()
 
 			}
 
-			removeListDuplicates();
+            //removeListDuplicates();
 
             if (diffMins <= 1) interimModal();
 
-            if ( (lastUpdated + 1000 * 60 * 60 * 24 * 7) + tz < new Date() )
-            {
-                upcomingTitle.innerText = "N/A";
-                upcomingDesc.innerText = "N/A";
-                programmeTitle.innerText = "N/A";
-                programmeDesc.innerText = "N/A";
-                return;
-            }
-
             upcomingTitle.innerText =
                 upcomingEntry
-                    ? upcomingEntry.querySelector("title").childNodes[0].nodeValue
+                    ? upcomingEntry.querySelector(".programme__title").innerText
                     : "No information on the upcoming broadcast";
 
             if (upcomingTitle.innerText.length >= 63)
@@ -207,7 +219,7 @@ function Radio()
 
             upcomingDesc.innerText =
                 upcomingEntry
-                    ? upcomingEntry.querySelector("synopsis").childNodes[0].nodeValue
+                    ? upcomingEntry.querySelector(".programme__synopsis").innerText
                     : "The upcoming broadcast has no description.";
  
             if (diffMins > 1)
@@ -219,8 +231,8 @@ function Radio()
             }
 
             programmeTitle.innerText =
-                entry
-                    ? entry.querySelector("title").childNodes[0].nodeValue
+                currentEntry
+                    ? currentEntry.querySelector(".programme__title").innerText
                     : "No information on the current broadcast";
 
             if (programmeTitle.innerText.length >= 43)
@@ -231,8 +243,8 @@ function Radio()
 
 
             programmeDesc.innerText =
-                entry
-                    ? entry.querySelector("synopsis").childNodes[0].nodeValue
+                currentEntry
+                    ? currentEntry.querySelector(".programme__synopsis").innerText
                     : "This broadcast has no description.";
 
 			if (programmeDesc.innerText.length >= 87)
@@ -241,9 +253,9 @@ function Radio()
 				programmeDesc.setAttribute('title', programmeDesc.innerText);
 			}
 
-            if (entry && entry.querySelector("images > image"))
+            if (currentEntry && currentEntry.querySelector(".programme__img"))
             {
-                var programmeThumb = entry.querySelector("images > image").textContent;
+                var programmeThumb = currentEntry.querySelector(".programme__img > img").dataset.src;
                 if (programmeThumb.includes("http") && !programmeThumb.includes("https"))
                 {
                     programmeThumb = programmeThumb.replace("http", "https");
@@ -255,9 +267,9 @@ function Radio()
                 programmeTitle.parentNode.insertBefore(featuredImgContainer, programmeTitle);
                 featuredImgContainer.appendChild(featuredImg);
             }
-            if (upcomingEntry && upcomingEntry.querySelector("images > image"))
+            if (upcomingEntry && upcomingEntry.querySelector(".programme__img"))
             {
-                var programmeThumb = upcomingEntry.querySelector("images > image").textContent;
+                var programmeThumb = upcomingEntry.querySelector(".programme__img > img").dataset.src;
                 if (programmeThumb.includes("http") && !programmeThumb.includes("https"))
                 {
                     programeThumb = programmeThumb.replace("http", "https");
