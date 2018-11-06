@@ -155,7 +155,7 @@ function Radio()
                 {
 					let futureItem = "<li><ul>\n";
 					let broadcastTime = element.querySelector(".broadcast__time").getAttribute("content");
-                    var programmeTitle = element.querySelector(".programme__title").innerText;
+                    var programmeTitle = element.querySelector(".programme__titles").textContent;
 
                     if (element.querySelector(".programme__subtitle"))
                     {
@@ -209,17 +209,19 @@ function Radio()
 
             if (diffMins <= 1) interimModal();
 
-            upcomingTitle.innerText =
-                upcomingEntry
-                ?   `${upcomingEntry.querySelector('.programme__title').innerText}\n${upcomingEntry.querySelector('.programme__subtitle').innerText}`
-                    : "No information on the upcoming broadcast";
+            if (upcomingEntry.querySelector('.programme__titles').textContent && typeof upcomingEntry.querySelector('.programme__subtitle') !== undefined) {
+                upcomingTitle.innerText = `${upcomingEntry.querySelector('.programme__titles').textContent}\n${upcomingEntry.querySelector('.programme__subtitle').innerText}`;
+            } else if (upcomingEntry.querySelector('.programme__titles').textContent) {
+                upcomingTitle.innerText = `${upcomingEntry.querySelector('.programme__titles').textContent}`;
+            } else {
+                upcomingTitle.innerText = 'No information on the upcoming broadcast';
+            }
 
             if (upcomingTitle.innerText.length >= 63)
             {
                 upcomingTitle.classList.add("title-long")
                 upcomingTitle.setAttribute("title", upcomingTitle.innerText);
             };
-
 
             upcomingDesc.innerText =
                 upcomingEntry
@@ -234,10 +236,13 @@ function Radio()
                 upcomingTime.appendChild(strongTags);
             }
 
-            programmeTitle.innerText =
-                currentEntry
-                    ? `${currentEntry.querySelector('.programme__title').innerText}\n${currentEntry.querySelector('.programme__subtitle').innerText}`
-                    : "No information on the current broadcast";
+            if (currentEntry.querySelector('.programme__titles').textContent && currentEntry.querySelector('.programme__subtitle') !== null) {
+                programmeTitle.innerText = `${currentEntry.querySelector('.programme__titles').textContent}\n${currentEntry.querySelector('.programme__subtitle').textContent}`;
+            } else if (currentEntry.querySelector('.programme__titles').textContent) {
+                programmeTitle.innerText = `${currentEntry.querySelector('.programme__titles').textContent}`;
+            } else {
+                programmeTitle.innerText = 'No information on the current broadcast';
+            }
 
             if (programmeTitle.innerText.length >= 43)
             {
