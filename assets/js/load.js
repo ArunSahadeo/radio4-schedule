@@ -264,7 +264,17 @@ function Radio()
 
             if (currentEntry && currentEntry.querySelector(".programme__img"))
             {
-                var programmeThumbSrcset = currentEntry.querySelector(".programme__img > img").dataset.srcset.split(",");
+                var currentProgrammeImg;
+
+                if (currentEntry.querySelector(".programme__img > img") !== null) {
+                    currentProgrammeImg = currentEntry.querySelector(".programme__img > img");    
+                } else if (currentEntry.querySelector(".programme__img img") !== null) {
+                    currentProgrammeImg = currentEntry.querySelector(".programme__img img");    
+                } else {
+                    return;
+                }
+
+                var programmeThumbSrcset = currentProgrammeImg.dataset.srcset.split(",");
                 var programmeThumb = programmeThumbSrcset.slice(-1)[0];
                 programmeThumb = String(programmeThumb).trim();
                 programmeThumb = programmeThumb.match(/http(s)?:[/]{2,}(.*)\.jpg/g);
@@ -283,7 +293,17 @@ function Radio()
             }
             if (upcomingEntry && upcomingEntry.querySelector(".programme__img"))
             {
-                var programmeThumbSrcset = upcomingEntry.querySelector(".programme__img > img").dataset.srcset.split(",");
+                var upcomingProgrammeImg;
+
+                if (upcomingEntry.querySelector(".programme__img > img") !== null) {
+                    upcomingProgrammeImg = upcomingEntry.querySelector(".programme__img > img");    
+                } else if (upcomingEntry.querySelector(".programme__img img") !== null) {
+                    upcomingProgrammeImg = upcomingEntry.querySelector(".programme__img img");    
+                } else {
+                    return;
+                }
+
+                var programmeThumbSrcset = upcomingProgrammeImg.dataset.srcset.split(",");
                 var programmeThumb = programmeThumbSrcset.slice(-1)[0];
                 programmeThumb = String(programmeThumb).trim();
                 programmeThumb = programmeThumb.match(/http(s)?:[/]{2,}(.*)\.jpg/g);
